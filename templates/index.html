@@ -3,7 +3,31 @@
         <title>Facial Expression Recognition</title>
     </head>
     <body>
-        <img id="bg" width=800px height=640px src="{{ url_for('video_feed')}}">
+        <h1 style="text-align: center;"> Facial Expression Recognition </h1>
+        <div class="container" style="text-align: center;">
+            <div class="row">
+              <div class="col">
+                <hr>
+          
+                <form action="/upload-image" method="POST" enctype="multipart/form-data">
+          
+                  <div class="form-group">
+                    <h2>Select video</h2>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" name="image" id="image">
+                    </div>
+                  </div>
+          
+                  <button type="submit" class="btn btn-primary">Upload</button>
+          
+                </form>
+          
+              </div>
+            </div>
+        </div>
+        <div class="video_player" style="text-align: center;">
+            <img id="bg" width=800px height=640px src="{{ url_for('video_feed') }}"> 
+        </div>
     </body>
 </html>
 

@@ -1,13 +1,27 @@
 import cv2
 from model import FacialExpressionModel
 import numpy as np
+import os
 
 facec = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 model = FacialExpressionModel("model.json", "model_weights.h5")
 font = cv2.FONT_HERSHEY_SIMPLEX
+unused_vid = []
 
 class VideoCamera(object):
     def __init__(self):
+        
+        if len(unused_vid) > 1:
+            print(unused_vid)
+            os.remove(os.path.join("./videos", unused_vid[0]))
+            unused_vid.pop(0)
+
+        for f in os.listdir("./videos"):
+            if f != "facial_exp.mkv" and f not in unused_vid:
+                self.video = cv2.VideoCapture(os.path.join("./videos", f))
+                unused_vid.append(f)
+                return
+        
         self.video = cv2.VideoCapture("./videos/facial_exp.mkv")
 
     def __del__(self):

@@ -1,8 +1,12 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, redirect
 from camera import VideoCamera
+from werkzeug.utils import secure_filename
+import os
 
 
 app = Flask(__name__)
+
+app.config["IMAGE_UPLOADS"] = "./videos"
 
 @app.route('/')
 def index():
@@ -18,6 +22,26 @@ def gen(camera):
 def video_feed():
     return Response(gen(VideoCamera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+
+@app.route("/upload-image", methods=["GET", "POST"])
+def upload_image():
+    if request.method == "POST":
+        if request.files:
+            image = request.files["image"]
+
+            if image.filename == "":
+                print("No filename")
+                return redirect(request.url)
+            else:
+                    
+                filename = secure_filename(image.filename)
+
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+                
+                return redirect(request.url)
+            
+    return render_template("index.html")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(debug=True)
